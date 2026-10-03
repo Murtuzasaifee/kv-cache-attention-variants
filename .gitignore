@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# uv / hatch
+.venv/
+.python-version
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+
+# MkDocs build output
+/site/
+
+# Archify visual-check sidecars (PNG/JSON/HTML siblings of diagram HTML)
+*.visual-check.*
+docs/diagrams/.visual-check/
+
+# Local tool caches / agent config
+.claude/
+.commandcode/
+.tokensave/
+CLAUDE.md

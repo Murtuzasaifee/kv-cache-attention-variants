@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "MHA Decode Step — KV Cache Mechanism",
+    "quality_profile": "showcase",
+    "viewBox": [1500, 720]
+  },
+  "components": [
+    { "id": "embed", "type": "frontend", "label": "token embedding", "pos": [40, 300], "size": [160, 70] },
+    { "id": "q_proj", "type": "backend", "label": "Q proj", "pos": [240, 130], "size": [140, 60], "tag": "new" },
+    { "id": "k_proj", "type": "backend", "label": "K proj", "pos": [240, 300], "size": [140, 60], "tag": "new" },
+    { "id": "v_proj", "type": "backend", "label": "V proj", "pos": [240, 470], "size": [140, 60], "tag": "new" },
+    { "id": "cache", "type": "database", "label": "KV cache", "pos": [420, 300], "size": [180, 70], "tag": "growing" },
+    { "id": "scores", "type": "backend", "label": "Q K^T / sqrt(d)", "pos": [640, 130], "size": [180, 70] },
+    { "id": "softmax", "type": "backend", "label": "softmax + mask", "pos": [860, 130], "size": [180, 70] },
+    { "id": "weighted", "type": "backend", "label": "weighted V", "pos": [860, 470], "size": [180, 70] },
+    { "id": "out_proj", "type": "external", "label": "output projection", "pos": [1080, 300], "size": [180, 70], "tag": "to FFN" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Project", "wraps": ["q_proj", "k_proj", "v_proj"], "pad": 14 },
+    { "kind": "region", "label": "Cache", "wraps": ["cache"], "pad": 14 },
+    { "kind": "region", "label": "Attention", "wraps": ["scores", "softmax", "weighted"], "pad": 14 }
+  ],
+  "connections": [
+    { "from": "embed", "to": "q_proj" },
+    { "from": "embed", "to": "k_proj" },
+    { "from": "embed", "to": "v_proj" },
+    { "from": "q_proj", "to": "scores", "label": "Q (1 new)" },
+    { "from": "k_proj", "to": "cache", "variant": "emphasis" },
+    { "from": "v_proj", "to": "cache", "variant": "emphasis" },
+    { "from": "cache", "to": "softmax", "label": "K V (cached)", "variant": "dashed" },
+    { "from": "scores", "to": "softmax" },
+    { "from": "softmax", "to": "weighted" },
+    { "from": "weighted", "to": "out_proj" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Computed", "items": ["Q, K, V projections run on the new token", "Attention scores: one Q attends to all cached K", "Linear projection to FFN input"] },
+    { "dot": "emerald", "title": "Reused", "items": ["Past K, V read from cache, not recomputed", "Cache grows by 1 entry per generated token", "Causal mask restricts which entries new Q sees"] },
+    { "dot": "amber", "title": "Per-Decode Cost", "items": ["Naive cost grows with sequence length", "Cached cost per token is independent of n", "Memory grows linearly in n (next: how much)"] }
+  ]
+}

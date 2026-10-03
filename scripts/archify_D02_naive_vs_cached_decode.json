@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Naive vs Cached Decode — Per-Step Comparison",
+    "quality_profile": "showcase",
+    "viewBox": [1280, 760],
+    "column_fit": "spread"
+  },
+  "participants": [
+    { "id": "prompt", "type": "external", "label": "Prompt tokens" },
+    { "id": "model_naive", "type": "backend", "label": "Naive decoder" },
+    { "id": "model_cached", "type": "backend", "label": "Cached decoder" },
+    { "id": "kv_cache", "type": "database", "label": "KV cache" },
+    { "id": "logits", "type": "messagebus", "label": "Next-token logits" }
+  ],
+  "segments": [
+    { "from": 145, "to": 305, "label": "Step 1 — prefill" },
+    { "from": 315, "to": 475, "label": "Step 2 — first new token" },
+    { "from": 485, "to": 690, "label": "Step 3 — second new token" }
+  ],
+  "messages": [
+    { "id": "step1-feed-naive", "from": "prompt", "to": "model_naive", "y": 165, "label": "feed all 4 tokens" },
+    { "id": "step1-recv-naive", "from": "model_naive", "to": "logits", "y": 195, "label": "compute K,V for 4" },
+    { "id": "step1-token-naive", "from": "logits", "to": "model_naive", "y": 225, "label": "next token" },
+    { "id": "step1-feed-cached", "from": "prompt", "to": "model_cached", "y": 265, "label": "feed all 4 tokens" },
+    { "id": "step1-write-cache", "from": "model_cached", "to": "kv_cache", "y": 295, "label": "store K,V for 4" },
+
+    { "id": "step2-feed-naive", "from": "prompt", "to": "model_naive", "y": 335, "label": "feed 5 tokens" },
+    { "id": "step2-recv-naive", "from": "model_naive", "to": "logits", "y": 365, "label": "recompute K,V for 5" },
+    { "id": "step2-token-naive", "from": "logits", "to": "model_naive", "y": 395, "label": "next token" },
+    { "id": "step2-feed-cached", "from": "prompt", "to": "model_cached", "y": 435, "label": "feed only token 5" },
+    { "id": "step2-cached-read", "from": "model_cached", "to": "kv_cache", "y": 465, "label": "read cached K,V [1..4]" },
+
+    { "id": "step3-feed-naive", "from": "prompt", "to": "model_naive", "y": 505, "label": "feed 6 tokens" },
+    { "id": "step3-recv-naive", "from": "model_naive", "to": "logits", "y": 535, "label": "recompute K,V for 6" },
+    { "id": "step3-token-naive", "from": "logits", "to": "model_naive", "y": 565, "label": "next token" },
+    { "id": "step3-feed-cached", "from": "prompt", "to": "model_cached", "y": 605, "label": "feed only token 6" },
+    { "id": "step3-cached-read", "from": "model_cached", "to": "kv_cache", "y": 635, "label": "read cached K,V [1..5]" },
+    { "id": "step3-cached-append", "from": "kv_cache", "to": "model_cached", "y": 665, "label": "append K,V(6)" }
+  ],
+  "activations": [
+    { "participant": "model_naive", "from": 165, "to": 580, "type": "backend" },
+    { "participant": "model_cached", "from": 265, "to": 680, "type": "backend" },
+    { "participant": "kv_cache", "from": 295, "to": 680, "type": "database" },
+    { "participant": "logits", "from": 195, "to": 575, "type": "messagebus" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "Naive Cost = Quadratic", "items": ["Every step recomputes K,V for the whole sequence so far", "Cumulative work grows as 1+2+3+... = O(n²)", "Identical math, wasted compute"] },
+    { "dot": "emerald", "title": "Cached Cost = Linear", "items": ["Compute K,V once, store, reuse forever", "Each step only processes 1 new token", "Mathematically identical output, much less work"] },
+    { "dot": "cyan", "title": "The Tradeoff", "items": ["Caching trades compute for memory: K,V stored for every past token", "Next session calculates exactly how much memory", "Tradeoff motivates every variant in this module"] }
+  ]
+}

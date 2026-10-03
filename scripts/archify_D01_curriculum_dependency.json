@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Module 03 — Curriculum Dependency",
+    "quality_profile": "showcase",
+    "viewBox": [1690, 720]
+  },
+  "components": [
+    { "id": "s00", "type": "external", "label": "00 Foundations", "pos": [40, 320], "size": [140, 70], "tag": "starting point" },
+    { "id": "s01", "type": "backend", "label": "01 Naive Decoding", "pos": [220, 320], "size": [150, 70] },
+    { "id": "s02", "type": "backend", "label": "02 MHA Recap", "pos": [410, 320], "size": [140, 70] },
+    { "id": "s03", "type": "database", "label": "03 KV Cache Math", "pos": [590, 320], "size": [150, 70] },
+    { "id": "s05", "type": "backend", "label": "05 GQA", "pos": [780, 320], "size": [130, 70], "tag": "generalization" },
+    { "id": "s04", "type": "backend", "label": "04 MQA", "pos": [950, 130], "size": [130, 70], "tag": "head sharing" },
+    { "id": "s06", "type": "backend", "label": "06 RoPE", "pos": [950, 510], "size": [130, 70] },
+    { "id": "s07", "type": "backend", "label": "07 MLA", "pos": [950, 320], "size": [130, 70], "tag": "DeepSeek-V2" },
+    { "id": "s08", "type": "cloud", "label": "08 FlashAttention", "pos": [1120, 320], "size": [150, 70], "tag": "colab" },
+    { "id": "s09", "type": "cloud", "label": "09 SDPA", "pos": [1310, 320], "size": [140, 70] },
+    { "id": "s10", "type": "cloud", "label": "10 vLLM", "pos": [1480, 320], "size": [150, 70], "tag": "capstone" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Compute + Memory Foundation", "wraps": ["s00", "s01", "s02", "s03"], "pad": 20 },
+    { "kind": "region", "label": "Attention Variants", "wraps": ["s04", "s05", "s07"], "pad": 20 },
+    { "kind": "region", "label": "Positional", "wraps": ["s06"], "pad": 20 },
+    { "kind": "region", "label": "Production + Serving", "wraps": ["s08", "s09", "s10"], "pad": 20 }
+  ],
+  "connections": [
+    { "from": "s00", "to": "s01" },
+    { "from": "s01", "to": "s02" },
+    { "from": "s02", "to": "s03" },
+    { "from": "s03", "to": "s05" },
+    { "from": "s05", "to": "s04", "label": "specialize", "variant": "emphasis", "route": "orthogonal-v" },
+    { "from": "s05", "to": "s07" },
+    { "from": "s03", "to": "s06", "label": "enables", "variant": "dashed", "route": "orthogonal-v" },
+    { "from": "s06", "to": "s07", "label": "decoupled", "variant": "emphasis", "route": "orthogonal-v" },
+    { "from": "s07", "to": "s08" },
+    { "from": "s08", "to": "s09" },
+    { "from": "s09", "to": "s10" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Failure-and-Fix", "items": ["Each session exposes a problem the next solves", "Compute waste → memory cost → cache size", "Variants preserve output, only cost changes"] },
+    { "dot": "emerald", "title": "Equivalence", "items": ["Caching, variants, FlashAttention: same output", "Only memory or compute differs across options", "Validation matters more than speedup"] },
+    { "dot": "amber", "title": "Production", "items": ["Sessions 4–7 in Llama 3, Qwen 3, DeepSeek", "Sessions 8 and 10 need GPU; Colab provided", "Each session has auto-graded assignment"] }
+  ]
+}

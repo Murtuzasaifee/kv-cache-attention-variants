@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Module 03 — KV Cache &amp; Attention Variants (Archify Diagrams)</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --fg: #1a1a1a;
+    --muted: #666;
+    --accent: #2563eb;
+    --card-bg: #ffffff;
+    --card-border: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  h1 { margin: 0 0 8px; font-size: 28px; }
+  .lede { color: var(--muted); margin: 0 0 32px; font-size: 15px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 18px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .num {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  .card h2 {
+    margin: 0 0 6px;
+    font-size: 17px;
+    color: var(--fg);
+  }
+  .card .sessions {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .card .preview {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--card-border);
+    color: var(--muted);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Module 03 — KV Cache &amp; Attention Variants</h1>
+<p class="lede">12 interactive diagrams that span the module's curriculum. Click any card to open its standalone HTML viewer (pan/zoom, theme switch, search, export to PNG/SVG).</p>
+
+<div class="grid">
+  <div class="card">
+    <a href="D01_curriculum_dependency.html">
+      <span class="num">D1</span>
+      <h2>Curriculum Dependency</h2>
+      <div class="sessions">Sessions 00–10</div>
+      <div class="preview">Which sessions depend on which. The failure-and-fix narrative across the module.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D02_naive_vs_cached_decode.html">
+      <span class="num">D2</span>
+      <h2>Naive vs Cached Decode</h2>
+      <div class="sessions">Sessions 00, 01</div>
+      <div class="preview">Per-step comparison showing what gets recomputed each step (naive) versus what gets reused from cache.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D03_mha_attention_cache.html">
+      <span class="num">D3</span>
+      <h2>MHA Attention with KV Cache</h2>
+      <div class="sessions">Session 02</div>
+      <div class="preview">What gets computed, what gets reused, what gets cached in a single MHA decode step.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D04_kv_cache_memory_formula.html">
+      <span class="num">D4</span>
+      <h2>KV Cache Memory Formula</h2>
+      <div class="sessions">Session 03</div>
+      <div class="preview">Anatomy of <code>KV_per_token = 2 × num_kv_heads × head_dim × num_layers × dtype_bytes</code>, each term in context.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D05_variant_cache_comparison.html">
+      <span class="num">D5</span>
+      <h2>Variant Cache Comparison</h2>
+      <div class="sessions">Sessions 04, 05, 07</div>
+      <div class="preview">MHA / GQA / MQA / MLA at matched cache budget. Where compression comes from and how it scales.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D06_gqa_spectrum.html">
+      <span class="num">D6</span>
+      <h2>GQA Group-Sharing Spectrum</h2>
+      <div class="sessions">Session 05</div>
+      <div class="preview">Single dial: <code>num_kv_groups</code>. MHA → GQA-32 → … → GQA-2 → MQA in one diagram.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D07_mla_latent_compression.html">
+      <span class="num">D7</span>
+      <h2>MLA Latent Compression</h2>
+      <div class="sessions">Session 07</div>
+      <div class="preview">Two cached items (latent, k_rope), decompressed on demand. Why RoPE doesn't commute with low-rank projection.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D08_rope_rotation.html">
+      <span class="num">D8</span>
+      <h2>RoPE Rotation Flow</h2>
+      <div class="sessions">Session 06</div>
+      <div class="preview">How position enters only through cos/sin tables, applied by <code>apply_rotary</code> with an offset for incremental decode.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D09_rope_context_extension.html">
+      <span class="num">D9</span>
+      <h2>RoPE Context Extension</h2>
+      <div class="sessions">Session 06</div>
+      <div class="preview">Three strategies for extending context: Linear (PI), Dynamic NTK, YaRN — different frequency-preservation tradeoffs.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D10_flashattention_tiling.html">
+      <span class="num">D10</span>
+      <h2>FlashAttention IO Tiling</h2>
+      <div class="sessions">Session 08</div>
+      <div class="preview">Naive (full HBM materialization) vs FlashAttention (SRAM-resident tiles + streaming softmax). Same output, lower data movement.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D11_sdpa_backend_dispatch.html">
+      <span class="num">D11</span>
+      <h2>PyTorch SDPA Backends</h2>
+      <div class="sessions">Session 09</div>
+      <div class="preview">Auto-dispatch tree and user-override path. The fallback to math IS the teaching point.</div>
+    </a>
+  </div>
+
+  <div class="card">
+    <a href="D12_pagedattention_blocks.html">
+      <span class="num">D12</span>
+      <h2>PagedAttention Blocks</h2>
+      <div class="sessions">Session 10</div>
+      <div class="preview">Naive per-request allocation vs block-table allocation. Why PagedAttention enables 2–4× throughput lift.</div>
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  Source JSON specs live in <code>../../scripts/archify_D*.json</code>. Each artifact passes all 9 showcase validation checks before delivery and contains deterministic browser-evidence across multiple viewports (1440×900, 1600×1000, 1920×1080, 2048×1320).
+</footer>
+
+</div>
+</body>
+</html>

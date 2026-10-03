@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "RoPE Context Extension Strategies",
+    "quality_profile": "showcase",
+    "viewBox": [1500, 720]
+  },
+  "components": [
+    { "id": "shared_in", "type": "frontend", "label": "shared inputs", "pos": [40, 200], "size": [180, 70], "tag": "base, target_len, trained_len" },
+
+    { "id": "linear", "type": "backend", "label": "Linear scaling", "pos": [320, 70], "size": [180, 80], "tag": "scale angles 1/factor" },
+    { "id": "ntk", "type": "backend", "label": "Dynamic NTK", "pos": [320, 200], "size": [180, 80], "tag": "stretch base" },
+    { "id": "yarn", "type": "backend", "label": "YaRN", "pos": [320, 330], "size": [180, 80], "tag": "ramp per-frequency" },
+
+    { "id": "cos_lin", "type": "database", "label": "cos sin (linear)", "pos": [600, 70], "size": [180, 60] },
+    { "id": "cos_ntk", "type": "database", "label": "cos sin (NTK)", "pos": [600, 200], "size": [180, 60] },
+    { "id": "cos_yarn", "type": "database", "label": "cos sin (YaRN)", "pos": [600, 330], "size": [180, 60] },
+
+    { "id": "compare", "type": "external", "label": "frequency response comparison", "pos": [860, 200], "size": [260, 80], "tag": "which frequencies preserved" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Three Strategies", "wraps": ["linear", "ntk", "yarn"], "pad": 16 },
+    { "kind": "region", "label": "Output tables", "wraps": ["cos_lin", "cos_ntk", "cos_yarn"], "pad": 16 }
+  ],
+  "connections": [
+    { "from": "shared_in", "to": "linear" },
+    { "from": "shared_in", "to": "ntk" },
+    { "from": "shared_in", "to": "yarn" },
+
+    { "from": "linear", "to": "cos_lin", "fromSide": "right", "toSide": "left" },
+    { "from": "ntk", "to": "cos_ntk", "fromSide": "right", "toSide": "left" },
+    { "from": "yarn", "to": "cos_yarn", "fromSide": "right", "toSide": "left" },
+
+    { "from": "cos_lin", "to": "compare", "fromSide": "right", "toSide": "left" },
+    { "from": "cos_ntk", "to": "compare", "fromSide": "right", "toSide": "left" },
+    { "from": "cos_yarn", "to": "compare", "fromSide": "right", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Linear (PI)", "items": ["Divide all angles by scale_factor", "Reduces angular resolution uniformly", "Simple and consistent, blurs high-frequency detail"] },
+    { "dot": "emerald", "title": "Dynamic NTK", "items": ["Increase the base to stretch frequencies", "Preserves high frequencies", "Lets low frequencies get rescaled naturally"] },
+    { "dot": "amber", "title": "YaRN", "items": ["Per-frequency ramp between linear and untouched", "Low-frequency: interpolated like PI", "High-frequency: untouched; best of both"] }
+  ]
+}

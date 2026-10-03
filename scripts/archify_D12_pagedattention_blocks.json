@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "PagedAttention — Block-Table Allocation",
+    "quality_profile": "showcase",
+    "viewBox": [1500, 720]
+  },
+  "components": [
+    { "id": "req_a", "type": "frontend", "label": "Request A", "pos": [40, 60], "size": [140, 50], "tag": "len 512" },
+    { "id": "req_b", "type": "frontend", "label": "Request B", "pos": [40, 270], "size": [140, 50], "tag": "len 2048" },
+    { "id": "req_c", "type": "frontend", "label": "Request C", "pos": [40, 480], "size": [140, 50], "tag": "len 300" },
+
+    { "id": "naive", "type": "backend", "label": "Naive contiguous", "pos": [260, 60], "size": [180, 60], "tag": "allocates full len" },
+    { "id": "waste_naive", "type": "external", "label": "naive waste", "pos": [490, 60], "size": [140, 60], "tag": "fragmented" },
+
+    { "id": "blocks", "type": "database", "label": "block size 16", "pos": [260, 470], "size": [180, 70], "tag": "shared unit" },
+    { "id": "waste_paged", "type": "external", "label": "paged waste", "pos": [490, 470], "size": [140, 70], "tag": "≤ block_size - 1" },
+
+    { "id": "bt_a", "type": "backend", "label": "table A", "pos": [720, 130], "size": [140, 50], "tag": "→ 32 blocks" },
+    { "id": "bt_b", "type": "backend", "label": "table B", "pos": [720, 270], "size": [140, 50], "tag": "→ 128 blocks" },
+    { "id": "bt_c", "type": "backend", "label": "table C", "pos": [720, 410], "size": [140, 50], "tag": "→ 19 blocks" },
+
+    { "id": "pool", "type": "database", "label": "physical block pool", "pos": [940, 270], "size": [200, 80], "tag": "fixed-size pool" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Naive", "wraps": ["naive", "waste_naive"], "pad": 14 },
+    { "kind": "region", "label": "Paged", "wraps": ["blocks", "bt_a", "bt_b", "bt_c", "pool", "waste_paged"], "pad": 14 }
+  ],
+  "connections": [
+    { "from": "req_b", "to": "naive", "fromSide": "right", "toSide": "left" },
+    { "from": "naive", "to": "waste_naive", "fromSide": "right", "toSide": "left" },
+
+    { "from": "req_b", "to": "blocks", "fromSide": "right", "toSide": "left" },
+    { "from": "req_c", "to": "blocks", "fromSide": "right", "toSide": "left" },
+    { "from": "blocks", "to": "waste_paged", "fromSide": "right", "toSide": "left" },
+
+    { "from": "blocks", "to": "bt_a", "fromSide": "right", "toSide": "left" },
+    { "from": "blocks", "to": "bt_b", "fromSide": "right", "toSide": "left" },
+    { "from": "blocks", "to": "bt_c", "fromSide": "right", "toSide": "left" },
+
+    { "from": "bt_a", "to": "pool", "fromSide": "right", "toSide": "top" },
+    { "from": "bt_b", "to": "pool", "fromSide": "right", "toSide": "left" },
+    { "from": "bt_c", "to": "pool", "fromSide": "right", "toSide": "bottom" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "Naive Waste", "items": ["Each request allocates its full expected length contiguously", "Short requests waste space inside their allocation", "Multi-request fragmentation compounds at scale"] },
+    { "dot": "emerald", "title": "Paged Wins", "items": ["Each request gets exactly ceil(len / block_size) blocks", "Worst-case waste per request: block_size - 1 tokens", "Block table enables non-contiguous physical mapping"] },
+    { "dot": "cyan", "title": "Beyond Fragmentation", "items": ["Block tables enable cross-request sharing (parallel sampling, prefixes)", "Copy-on-write at block granularity", "2-4x throughput lift at the same hardware"] }
+  ]
+}

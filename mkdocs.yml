@@ -1,0 +1,58 @@
+site_name: KV Cache & Attention Variants — Module 03
+site_description: Zero-to-advanced course docs — Naive Decoding through PagedAttention/vLLM
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - content.code.copy
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - "Session 00 — Foundations": 00_foundations.md
+  - "Session 01 — Naive Decoding": 01_naive_decoding.md
+  - "Session 02 — KV Cache Memory Math": 02_kv_cache_memory_math.md
+  - "Session 03 — MHA Recap": 03_mha_recap.md
+  - "Session 04 — MQA": 04_mqa.md
+  - "Session 05 — GQA": 05_gqa.md
+  - "Session 06 — MLA": 06_mla.md
+  - "Session 07 — RoPE": 07_rope.md
+  - "Session 08 — FlashAttention": 08_flashattention.md
+  - "Session 09 — PyTorch SDPA": 09_pytorch_sdpa.md
+  - "Session 10 — PagedAttention / vLLM": 10_pagedattention_vllm.md
+  - "Interactive Diagrams": diagrams.md
