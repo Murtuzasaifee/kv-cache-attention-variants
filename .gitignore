@@ -34,3 +34,16 @@ docs/diagrams/.visual-check/
 .commandcode/
 .tokensave/
 CLAUDE.md
+
+# Course content not published
+answer_keys/
+assignments/
+colab/
+notebooks/
+reference_tables/
+rubrics/
+scripts/
+slides/
+tests/
+jupyter-implementation.md
+kv-cache-attention-variants-module.md

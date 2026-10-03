@@ -33,13 +33,8 @@ A landing page linking all 12 is at **[diagrams/index.html](diagrams/index.html)
 
 ## Source Specs
 
-Each diagram's source JSON lives in `../scripts/archify_D*.json`. Each spec:
-
-- passes all 9 showcase artifact checks (0 errors, 0 warnings)
-- ships with deterministic browser evidence at 1440×900, 1600×1000, 1920×1080, 2048×1320
-
-The series plan with rationale, build sequence, and validation gates is in `../scripts/archify_diagram_series_plan.md`.
+Each diagram is a standalone, self-contained HTML artifact — all data is inlined, so the files work offline and deploy as-is.
 
 ## Note on Curriculum Order
 
-The diagrams use the **approved reordered sequence** (RoPE before MLA, MHA Recap before memory math) for pedagogical reasons. The session nav above uses the **original module spec** numbering. When teaching, follow the diagram order; when referencing tests, follow the file numbers.
+The diagrams use the **approved reordered sequence** (RoPE before MLA, MHA Recap before memory math) for pedagogical reasons. The session nav above uses the **original module spec** numbering. When teaching, follow the diagram order; when referencing the sessions, follow the file numbers.
