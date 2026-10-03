@@ -16,7 +16,7 @@ Mac-first: runs on CPU/MPS by default (`sdpa_backends.default_device()`). No CUD
 
 - `src/kv_cache_variants/` — source of truth, all runnable modules
 - `src/kv_cache_variants/lessons/` — one rich-terminal walkthrough script per session, reusing the modules above (no reimplemented math)
-- `teaching_notebooks/` — full zero-to-advanced lecture notebooks (00 foundations + 10 sessions), detailed explanations, Mermaid diagrams, worked examples
+- `teaching_notebooks/` — full zero-to-advanced lecture notebooks (00 foundations through 04 MQA), detailed explanations, Mermaid diagrams, worked examples
 - `docs/`, `mkdocs.yml` — MkDocs (Material) site rendering the module as browsable pages, including 12 interactive diagrams (`docs/diagrams/`) — `uv sync --extra docs && uv run mkdocs serve`
 
 ## Run

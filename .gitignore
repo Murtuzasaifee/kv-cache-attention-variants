@@ -45,5 +45,11 @@ rubrics/
 scripts/
 slides/
 tests/
+teaching_notebooks/05_gqa.ipynb
+teaching_notebooks/06_mla.ipynb
+teaching_notebooks/07_rope.ipynb
+teaching_notebooks/08_flashattention.ipynb
+teaching_notebooks/09_pytorch_sdpa.ipynb
+teaching_notebooks/10_pagedattention_vllm.ipynb
 jupyter-implementation.md
 kv-cache-attention-variants-module.md
